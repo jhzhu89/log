@@ -395,6 +395,9 @@ func (l *loggingT) fileAndLine(depth int) (string, int) {
 // TODO: refactor println, print, printf
 
 func (l *loggingT) println(s severity, fields logrus.Fields, args ...interface{}) {
+	if s < l.stderrThreshold.get() {
+		return
+	}
 	file, line := l.fileAndLine(0)
 	ctx := l.logrus.WithField("prefix", fmt.Sprintf("%s:%v", file, line)).WithFields(fields)
 	if l.traceLocation.isSet() {
@@ -420,10 +423,16 @@ func (l *loggingT) println(s severity, fields logrus.Fields, args ...interface{}
 }
 
 func (l *loggingT) print(s severity, fields logrus.Fields, args ...interface{}) {
+	if s < l.stderrThreshold.get() {
+		return
+	}
 	l.printDepth(s, 1, fields, args...)
 }
 
 func (l *loggingT) printDepth(s severity, depth int, fields logrus.Fields, args ...interface{}) {
+	if s < l.stderrThreshold.get() {
+		return
+	}
 	file, line := l.fileAndLine(depth)
 	ctx := l.logrus.WithField("prefix", fmt.Sprintf("%s:%v", file, line)).WithFields(fields)
 	if l.traceLocation.isSet() {
@@ -448,6 +457,9 @@ func (l *loggingT) printDepth(s severity, depth int, fields logrus.Fields, args 
 }
 
 func (l *loggingT) printf(s severity, fields logrus.Fields, format string, args ...interface{}) {
+	if s < l.stderrThreshold.get() {
+		return
+	}
 	file, line := l.fileAndLine(0)
 	ctx := l.logrus.WithField("prefix", fmt.Sprintf("%s:%v", file, line)).WithFields(fields)
 	if l.traceLocation.isSet() {
