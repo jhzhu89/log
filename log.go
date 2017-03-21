@@ -392,21 +392,31 @@ func (l *loggingT) fileAndLine(depth int) (string, int) {
 	return file, line
 }
 
-// TODO: refactor println, print, printf
+func (l *loggingT) contextLogger(file string, line int, fields logrus.Fields) *logrus.Entry {
+	return l.logrus.WithField("prefix", fmt.Sprintf("%s:%v", file, line)).WithFields(fields)
+}
+
+func (l *loggingT) traceLoc(file string, line int) string {
+	if l.traceLocation.isSet() {
+		if l.traceLocation.match(file, line) {
+			var buf bytes.Buffer
+			buf.WriteString("\n")
+			buf.Write(stacks(false))
+			return buf.String()
+		}
+	}
+	return ""
+}
 
 func (l *loggingT) println(s severity, fields logrus.Fields, args ...interface{}) {
 	if s < l.stderrThreshold.get() {
 		return
 	}
 	file, line := l.fileAndLine(0)
-	ctx := l.logrus.WithField("prefix", fmt.Sprintf("%s:%v", file, line)).WithFields(fields)
-	if l.traceLocation.isSet() {
-		if l.traceLocation.match(file, line) {
-			var buf bytes.Buffer
-			buf.WriteString("\n")
-			buf.Write(stacks(false))
-			args = append(args, buf.String())
-		}
+	ctx := l.contextLogger(file, line, fields)
+	trace := l.traceLoc(file, line)
+	if trace != "" {
+		args = append(args, trace)
 	}
 	switch s {
 	case infoLog:
@@ -434,14 +444,10 @@ func (l *loggingT) printDepth(s severity, depth int, fields logrus.Fields, args 
 		return
 	}
 	file, line := l.fileAndLine(depth)
-	ctx := l.logrus.WithField("prefix", fmt.Sprintf("%s:%v", file, line)).WithFields(fields)
-	if l.traceLocation.isSet() {
-		if l.traceLocation.match(file, line) {
-			var buf bytes.Buffer
-			buf.WriteString("\n")
-			buf.Write(stacks(false))
-			args = append(args, buf.String())
-		}
+	ctx := l.contextLogger(file, line, fields)
+	trace := l.traceLoc(file, line)
+	if trace != "" {
+		args = append(args, trace)
 	}
 	switch s {
 	case infoLog:
@@ -461,12 +467,11 @@ func (l *loggingT) printf(s severity, fields logrus.Fields, format string, args 
 		return
 	}
 	file, line := l.fileAndLine(0)
-	ctx := l.logrus.WithField("prefix", fmt.Sprintf("%s:%v", file, line)).WithFields(fields)
-	if l.traceLocation.isSet() {
-		if l.traceLocation.match(file, line) {
-			format += "\n%s"
-			args = append(args, string(stacks(false)))
-		}
+	ctx := l.contextLogger(file, line, fields)
+	trace := l.traceLoc(file, line)
+	if trace != "" {
+		format += "\n%s"
+		args = append(args, trace)
 	}
 	switch s {
 	case infoLog:
