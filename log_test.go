@@ -46,4 +46,6 @@ func TestLog(t *testing.T) {
 	//Infof("%#v", V(0).WithField("key", 1))
 	ctx = WithField("key", "what")
 	ctx.Info("test")
+
+	V(0).WithFields(Fields{"key1": "value"}).Infoln("a test")
 }

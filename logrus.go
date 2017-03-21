@@ -6,12 +6,14 @@ import (
 
 type Entry logrus.Fields
 
+type Fields logrus.Fields
+
 func (e *Entry) WithField(key string, value interface{}) *Entry {
 	(*e)[key] = value
 	return e
 }
 
-func (e *Entry) WithFields(fields logrus.Fields) *Entry {
+func (e *Entry) WithFields(fields Fields) *Entry {
 	for k, v := range fields {
 		(*e)[k] = v
 	}
@@ -85,7 +87,7 @@ func (ve *VerboseEntry) WithField(key string, value interface{}) *VerboseEntry {
 	return ve
 }
 
-func (ve *VerboseEntry) WithFields(fields logrus.Fields) *VerboseEntry {
+func (ve *VerboseEntry) WithFields(fields Fields) *VerboseEntry {
 	if *ve.verbose {
 		ve.entry.WithFields(fields)
 	}

@@ -594,7 +594,7 @@ func (v Verbose) WithField(key string, value interface{}) (ve *VerboseEntry) {
 	return
 }
 
-func (v Verbose) WithFields(fields logrus.Fields) (ve *VerboseEntry) {
+func (v Verbose) WithFields(fields Fields) (ve *VerboseEntry) {
 	if v {
 		ve = &VerboseEntry{&v, (&Entry{}).WithFields(fields)}
 	} else {
@@ -748,7 +748,7 @@ func WithField(key string, value interface{}) *Entry {
 
 // Adds a struct of fields to the log entry. All it does is call `WithField` for
 // each `Field`.
-func WithFields(fields logrus.Fields) *Entry {
+func WithFields(fields Fields) *Entry {
 	return (&Entry{}).WithFields(fields)
 }
 
