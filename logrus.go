@@ -25,6 +25,14 @@ func (e *Entry) WithError(err error) *Entry {
 	return e
 }
 
+func (e *Entry) Clone() (entry *Entry) {
+	entry = &Entry{}
+	for k, v := range *e {
+		(*entry)[k] = v
+	}
+	return
+}
+
 func (e *Entry) Infoln(args ...interface{}) {
 	logging.println(infoLog, logrus.Fields(*e), args...)
 }
@@ -92,6 +100,17 @@ func (ve *VerboseEntry) WithFields(fields Fields) *VerboseEntry {
 		ve.entry.WithFields(fields)
 	}
 	return ve
+}
+
+func (ve *VerboseEntry) Clone() (ventry *VerboseEntry) {
+	ventry = &VerboseEntry{ve.verbose, nil}
+	if *ve.verbose {
+		ventry.entry = &Entry{}
+		for k, v := range *ve.entry {
+			(*ventry.entry)[k] = v
+		}
+	}
+	return
 }
 
 func (ve *VerboseEntry) Info(args ...interface{}) {
