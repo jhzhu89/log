@@ -6,21 +6,21 @@ import (
 
 type Entry logrus.Fields
 
-type Fields logrus.Fields
+type FieldsMap logrus.Fields
 
-func (e *Entry) WithField(key string, value interface{}) *Entry {
+func (e *Entry) Field(key string, value interface{}) *Entry {
 	(*e)[key] = value
 	return e
 }
 
-func (e *Entry) WithFields(fields Fields) *Entry {
+func (e *Entry) Fields(fields FieldsMap) *Entry {
 	for k, v := range fields {
 		(*e)[k] = v
 	}
 	return e
 }
 
-func (e *Entry) WithError(err error) *Entry {
+func (e *Entry) Err(err error) *Entry {
 	(*e)["error"] = err
 	return e
 }
@@ -88,16 +88,16 @@ type VerboseEntry struct {
 	entry   *Entry
 }
 
-func (ve *VerboseEntry) WithField(key string, value interface{}) *VerboseEntry {
+func (ve *VerboseEntry) Field(key string, value interface{}) *VerboseEntry {
 	if *ve.verbose {
-		ve.entry.WithField(key, value)
+		ve.entry.Field(key, value)
 	}
 	return ve
 }
 
-func (ve *VerboseEntry) WithFields(fields Fields) *VerboseEntry {
+func (ve *VerboseEntry) Fields(fields FieldsMap) *VerboseEntry {
 	if *ve.verbose {
-		ve.entry.WithFields(fields)
+		ve.entry.Fields(fields)
 	}
 	return ve
 }
