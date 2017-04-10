@@ -39,7 +39,7 @@ func TestLog(t *testing.T) {
 	ctx.Warningf("w")
 	ctx.Errorf("e")
 	//ctx.Fatalf("f %v", "FF")
-	ctx.Err(fmt.Errorf("this is an error: %v", 100)).Infof("test")
+	ctx.E(fmt.Errorf("this is an error: %v", 100)).Infof("test")
 
 	V(0).F("key", "value").Info("haha")
 	V(0).F("key1", "value").Info("haha")

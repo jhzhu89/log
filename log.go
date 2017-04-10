@@ -771,7 +771,7 @@ func Fs(fields FieldsMap) *Entry {
 }
 
 // Add an error as single field to the log entry.  All it does is call
-// `Err` for the given `error`.
-func Err(err error) *Entry {
-	return (&Entry{}).Err(err)
+// `E` for the given `error`.
+func E(err error) *Entry {
+	return (&Entry{}).E(err)
 }

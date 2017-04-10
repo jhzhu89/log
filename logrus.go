@@ -20,7 +20,7 @@ func (e *Entry) Fs(fields FieldsMap) *Entry {
 	return e
 }
 
-func (e *Entry) Err(err error) *Entry {
+func (e *Entry) E(err error) *Entry {
 	(*e)["error"] = err
 	return e
 }
