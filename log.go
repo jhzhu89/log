@@ -603,18 +603,18 @@ func (v Verbose) Infof(format string, args ...interface{}) {
 	}
 }
 
-func (v Verbose) Field(key string, value interface{}) (ve *VerboseEntry) {
+func (v Verbose) F(key string, value interface{}) (ve *VerboseEntry) {
 	if v {
-		ve = &VerboseEntry{&v, (&Entry{}).Field(key, value)}
+		ve = &VerboseEntry{&v, (&Entry{}).F(key, value)}
 	} else {
 		ve = &VerboseEntry{&v, nil}
 	}
 	return
 }
 
-func (v Verbose) Fields(fields FieldsMap) (ve *VerboseEntry) {
+func (v Verbose) Fs(fields FieldsMap) (ve *VerboseEntry) {
 	if v {
-		ve = &VerboseEntry{&v, (&Entry{}).Fields(fields)}
+		ve = &VerboseEntry{&v, (&Entry{}).Fs(fields)}
 	} else {
 		ve = &VerboseEntry{&v, nil}
 	}
@@ -760,14 +760,14 @@ func Exitf(format string, args ...interface{}) {
 // Adds a field to the log entry, note that it doesn't log until you call
 // Debug, Print, Info, Warn, Fatal or Panic. It only creates a log entry.
 // If you want multiple fields, use `Fields`.
-func Field(key string, value interface{}) *Entry {
-	return (&Entry{}).Field(key, value)
+func F(key string, value interface{}) *Entry {
+	return (&Entry{}).F(key, value)
 }
 
 // Adds a struct of fields to the log entry. All it does is call `WithField` for
 // each `Field`.
-func Fields(fields FieldsMap) *Entry {
-	return (&Entry{}).Fields(fields)
+func Fs(fields FieldsMap) *Entry {
+	return (&Entry{}).Fs(fields)
 }
 
 // Add an error as single field to the log entry.  All it does is call
