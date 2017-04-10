@@ -612,9 +612,9 @@ func (v Verbose) F(key string, value interface{}) (ve *VerboseEntry) {
 	return
 }
 
-func (v Verbose) Fs(fields FieldsMap) (ve *VerboseEntry) {
+func (v Verbose) Fs(kvs ...interface{}) (ve *VerboseEntry) {
 	if v {
-		ve = &VerboseEntry{&v, (&Entry{}).Fs(fields)}
+		ve = &VerboseEntry{&v, (&Entry{}).Fs(kvs...)}
 	} else {
 		ve = &VerboseEntry{&v, nil}
 	}
@@ -766,8 +766,8 @@ func F(key string, value interface{}) *Entry {
 
 // Adds a struct of fields to the log entry. All it does is call `WithField` for
 // each `Field`.
-func Fs(fields FieldsMap) *Entry {
-	return (&Entry{}).Fs(fields)
+func Fs(kvs ...interface{}) *Entry {
+	return (&Entry{}).Fs(kvs...)
 }
 
 // Add an error as single field to the log entry.  All it does is call

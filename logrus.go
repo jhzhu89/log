@@ -13,9 +13,9 @@ func (e *Entry) F(key string, value interface{}) *Entry {
 	return e
 }
 
-func (e *Entry) Fs(fields FieldsMap) *Entry {
-	for k, v := range fields {
-		(*e)[k] = v
+func (e *Entry) Fs(kvs ...interface{}) *Entry {
+	for i := 0; i < len(kvs); i += 2 {
+		(*e)[kvs[i].(string)] = kvs[i+1]
 	}
 	return e
 }
@@ -95,9 +95,9 @@ func (ve *VerboseEntry) F(key string, value interface{}) *VerboseEntry {
 	return ve
 }
 
-func (ve *VerboseEntry) Fs(fields FieldsMap) *VerboseEntry {
+func (ve *VerboseEntry) Fs(kvs ...interface{}) *VerboseEntry {
 	if *ve.verbose {
-		ve.entry.Fs(fields)
+		ve.entry.Fs(kvs...)
 	}
 	return ve
 }

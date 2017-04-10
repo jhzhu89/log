@@ -47,5 +47,6 @@ func TestLog(t *testing.T) {
 	ctx = F("key", "what")
 	ctx.Info("test")
 
-	V(0).Fs(FieldsMap{"key1": "value"}).Infoln("a test")
+	V(0).Fs("key1", "value", "key2?", "value2").Infoln("a test")
+	ctx.Clone().Fs("key1", "value", "key2?", "value2").Error("a test")
 }
