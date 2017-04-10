@@ -36,7 +36,6 @@ import (
 	"time"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/x-cray/logrus-prefixed-formatter"
 )
 
 // severity identifies the sort of log: info, warning etc. It also implements
@@ -55,6 +54,8 @@ const (
 	fatalLog
 	numSeverity = 4
 )
+
+const srcMeta = "src"
 
 var severityName = []string{
 	infoLog:    "INFO",
@@ -311,7 +312,7 @@ func (t *traceLocation) Set(value string) error {
 
 func initLogrus() {
 	logging.logrus = logrus.New()
-	formatter := prefixed.TextFormatter{TimestampFormat: time.StampMicro}
+	formatter := TextFormatter{TimestampFormat: time.StampMicro, FullTimestamp: true}
 	logging.logrus.Formatter = &formatter
 	logging.logrus.Level = logrus.DebugLevel // Set to lowest.
 }
@@ -393,7 +394,7 @@ func (l *loggingT) fileAndLine(depth int) (string, int) {
 }
 
 func (l *loggingT) contextLogger(file string, line int, fields logrus.Fields) *logrus.Entry {
-	return l.logrus.WithField("prefix", fmt.Sprintf("%s:%v", file, line)).WithFields(fields)
+	return l.logrus.WithField(srcMeta, fmt.Sprintf("%s:%v", file, line)).WithFields(fields)
 }
 
 func (l *loggingT) traceLoc(file string, line int) string {
